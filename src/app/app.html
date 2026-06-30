@@ -1,0 +1,103 @@
+<!-- Single-page link-in-bio layout matching the wireframe -->
+<div class="link-page">
+  <header class="profile-header">
+    <!-- Settings button from the wireframe -->
+    <button
+      type="button"
+      class="settings-btn"
+      (click)="cycleDialogDirection()"
+      title="Cycle dialog slide direction"
+    >
+      Settings
+    </button>
+
+    <!-- Avatar placeholder with dashed circle and camera icon -->
+    <div class="avatar-placeholder" aria-label="Profile photo placeholder">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M9 3h6l1.2 2.4H20a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6.4a1 1 0 0 1 1-1h3.8L9 3zm3 14.5a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9z"
+        />
+      </svg>
+    </div>
+
+    <!-- Editable-looking title with dashed underline -->
+    <h1 class="page-title">{{ pageTitle() }}</h1>
+  </header>
+
+  <main class="blocks-section">
+    <!-- Primary dashed action blocks -->
+    @for (block of actionBlocks; track block.id) {
+      <button
+        type="button"
+        class="action-block"
+        (click)="openBlockDialog(block.id)"
+      >
+        <span class="plus">+</span>
+        {{ block.label }}
+      </button>
+    }
+
+    <!-- Saved messenger buttons preview -->
+    @for (item of savedMessengers(); track item.displayLabel) {
+      <a class="saved-item" href="#" (click)="$event.preventDefault()">
+        {{ item.displayLabel }} · {{ item.platform }}
+      </a>
+    }
+
+    <!-- Saved custom blocks preview -->
+    @for (item of savedBlocks(); track item.title) {
+      <a class="saved-item" [href]="item.url" target="_blank" rel="noopener">
+        {{ item.title }}
+      </a>
+    }
+
+    <!-- Saved social links preview -->
+    @for (item of savedSocialLinks(); track item.username) {
+      <a
+        class="saved-item"
+        [href]="item.profileUrl"
+        target="_blank"
+        rel="noopener"
+      >
+        {{ item.platform }} · {{ item.username }}
+      </a>
+    }
+  </main>
+
+  <footer class="page-footer">
+    made on <strong>shor.by</strong>
+  </footer>
+</div>
+
+<!-- Slide dialog shared by every action block -->
+@if (activeBlockConfig(); as config) {
+  <app-slide-dialog
+    [open]="isDialogOpen()"
+    [title]="config.dialogTitle"
+    [description]="config.dialogDescription"
+    [direction]="dialogDirection()"
+    (closed)="closeDialog()"
+  >
+    <!-- Render the correct form for the active block -->
+    @switch (activeBlock()) {
+      @case ('messengers') {
+        <app-messenger-form
+          (saved)="onMessengerSaved($event)"
+          (cancelled)="closeDialog()"
+        />
+      }
+      @case ('content-block') {
+        <app-content-block-form
+          (saved)="onContentBlockSaved($event)"
+          (cancelled)="closeDialog()"
+        />
+      }
+      @case ('social-links') {
+        <app-social-link-form
+          (saved)="onSocialLinkSaved($event)"
+          (cancelled)="closeDialog()"
+        />
+      }
+    }
+  </app-slide-dialog>
+}

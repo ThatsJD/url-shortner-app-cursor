@@ -1,0 +1,31 @@
+<form class="block-form" [formGroup]="form" (ngSubmit)="submit()">
+  <label class="field">
+    <span>Block title</span>
+    <input type="text" formControlName="title" placeholder="Visit my store" />
+    @if (showError('title')) {
+      <small class="error">Title is required.</small>
+    }
+  </label>
+
+  <label class="field">
+    <span>Destination URL</span>
+    <input type="url" formControlName="url" placeholder="https://example.com" />
+    @if (showError('url')) {
+      <small class="error">Enter a valid URL starting with http:// or https://.</small>
+    }
+  </label>
+
+  <label class="field">
+    <span>Short description (optional)</span>
+    <textarea
+      rows="3"
+      formControlName="description"
+      placeholder="Tell visitors what this link is about"
+    ></textarea>
+  </label>
+
+  <div class="actions">
+    <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    <button type="submit" class="btn btn-primary">Save block</button>
+  </div>
+</form>

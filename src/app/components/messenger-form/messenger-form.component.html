@@ -1,0 +1,44 @@
+<form class="block-form" [formGroup]="form" (ngSubmit)="submit()">
+  <!-- Platform picker -->
+  <label class="field">
+    <span>Messenger platform</span>
+    <select formControlName="platform">
+      @for (platform of platforms; track platform) {
+        <option [value]="platform">{{ platform }}</option>
+      }
+    </select>
+  </label>
+
+  <!-- Phone number, username, or chat link depending on the platform -->
+  <label class="field">
+    <span>Phone number or username</span>
+    <input
+      type="text"
+      formControlName="contactValue"
+      placeholder="+1 555 0100 or @username"
+    />
+    @if (showError('contactValue')) {
+      <small class="error">Enter a valid phone number or username.</small>
+    }
+  </label>
+
+  <!-- Label shown on the public link page -->
+  <label class="field">
+    <span>Button label</span>
+    <input
+      type="text"
+      formControlName="displayLabel"
+      placeholder="Chat on WhatsApp"
+    />
+    @if (showError('displayLabel')) {
+      <small class="error">Button label is required (max 40 characters).</small>
+    }
+  </label>
+
+  <div class="actions">
+    <button type="button" class="btn btn-secondary" (click)="cancel()">
+      Cancel
+    </button>
+    <button type="submit" class="btn btn-primary">Save messenger</button>
+  </div>
+</form>

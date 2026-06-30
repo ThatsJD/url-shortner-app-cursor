@@ -1,0 +1,34 @@
+<!-- Backdrop + sliding panel wrapper -->
+@if (isOpen()) {
+  <div
+    class="dialog-backdrop"
+    [class]="backdropClass()"
+    role="presentation"
+    (click)="onBackdropClick()"
+  >
+    <section
+      class="dialog-panel"
+      [class]="directionClass()"
+      [class.dialog-panel--open]="isOpen()"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="title"
+      (click)="onPanelClick($event)"
+    >
+      <!-- Drag handle gives a familiar bottom-sheet affordance -->
+      <div class="dialog-handle" aria-hidden="true"></div>
+
+      <header class="dialog-header">
+        <h2>{{ title }}</h2>
+        @if (description) {
+          <p>{{ description }}</p>
+        }
+      </header>
+
+      <!-- Parent component projects the block-specific form here -->
+      <div class="dialog-body">
+        <ng-content />
+      </div>
+    </section>
+  </div>
+}
